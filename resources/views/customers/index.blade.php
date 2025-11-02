@@ -13,6 +13,24 @@
 
     <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body bg-light p-4">
+
+            {{-- ✅ Alertas de sucesso ou erro --}}
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <div>{{ session('success') }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
+            @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>{{ session('error') }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
             <table class="table table-hover align-middle text-center">
                 <thead class="table-dark">
                     <tr>
@@ -27,34 +45,35 @@
                 </thead>
                 <tbody>
                     @forelse($customers as $customer)
-                        <tr>
-                            <td class="fw-semibold">{{ $customer->id }}</td>
-                            <td>{{ $customer->name }}</td>
-                            <td>{{ $customer->cpf }}</td>
-                            <td>{{ $customer->email }}</td>
-                            <td>{{ $customer->phone }}</td>
-                            <td>{{ $customer->address }}</td>
-                            <td>
-                                <a href="{{ route('customers.edit', $customer->id) }}" class="btn btn-sm btn-warning me-1">
-                                    <i class="bi bi-pencil-square"></i> Editar
-                                </a>
-                                <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Tem certeza que deseja deletar este cliente?')">
-                                        <i class="bi bi-trash3"></i> Deletar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr class="bg-white border-bottom">
+                        <td class="fw-semibold">{{ $customer->id }}</td>
+                        <td>{{ $customer->name }}</td>
+                        <td>{{ $customer->cpf }}</td>
+                        <td>{{ $customer->email }}</td>
+                        <td>{{ $customer->phone }}</td>
+                        <td>{{ $customer->address }}</td>
+                        <td>
+                            <a href="{{ route('customers.edit', $customer->id) }}" class="btn btn-sm btn-warning me-1">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+
+                            <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Tem certeza que deseja deletar este cliente?')">
+                                    <i class="bi bi-trash3"></i> Deletar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="text-muted py-4">
-                                <i class="bi bi-exclamation-circle fs-4"></i><br>
-                                Nenhum cliente cadastrado.
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="bi bi-exclamation-circle fs-4"></i><br>
+                            Nenhum cliente cadastrado.
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -62,3 +81,5 @@
     </div>
 </div>
 @endsection
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">

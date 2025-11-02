@@ -6,7 +6,7 @@
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center rounded-top-4 py-3 px-4">
             <h5 class="mb-0">
                 <i class="bi bi-tags me-2"></i>
-                {{ isset($category) ? 'Editar Categoria' : 'Adicionar Categoria' }}
+                {{ isset($category->id) ? 'Editar Categoria' : 'Adicionar Categoria' }}
             </h5>
             <a href="{{ route('categories.index') }}" class="btn btn-outline-light btn-sm">
                 <i class="bi bi-arrow-left-circle"></i> Voltar
@@ -14,9 +14,9 @@
         </div>
 
         <div class="card-body bg-light px-4 py-4">
-            <form action="{{ isset($category) ? route('categories.update', $category->id) : route('categories.store') }}" method="POST">
+            <form action="{{ isset($category->id) ? route('categories.update', $category->id) : route('categories.store') }}" method="POST">
                 @csrf
-                @if (isset($category))
+                @if (isset($category->id))
                     @method('PUT')
                 @endif
 
@@ -26,9 +26,10 @@
                         <i class="bi bi-tags me-1 text-primary"></i> Nome da Categoria
                     </label>
                     <input type="text" class="form-control" id="name" name="name"
-                        placeholder="Ex: Eletrônicos" value="{{ old('name', $category->name ?? '') }}" />
+                        placeholder="Ex: Eletrônicos"
+                        value="{{ old('name', $category->name ?? '') }}" />
                     @error('name')
-                    <small class="text-danger">{{ $message }}</small>
+                        <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
@@ -39,9 +40,10 @@
                     </label>
                     <input type="number" id="stock" name="stock" class="form-control"
                         placeholder="Quantidade de produtos"
-                        value="{{ old('stock', $category->stock ?? '') }}" />
+                        {{-- ⚙️ Mudança importante aqui --}}
+                        value="{{ isset($category->id) ? $category->stock : old('stock', '') }}" />
                     @error('stock')
-                    <small class="text-danger">{{ $message }}</small>
+                        <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
@@ -51,11 +53,11 @@
                         <i class="bi bi-house me-1 text-primary"></i> Status
                     </label>
                     <select name="status" class="form-select">
-                        <option value="Ativa" {{ old('status', isset($category) ? $category->status : '') == 'Ativa' ? 'selected' : '' }}>Ativa</option>
-                        <option value="Inativa" {{ old('status', isset($category) ? $category->status : '') == 'Inativa' ? 'selected' : '' }}>Inativa</option>
+                        <option value="Ativa" {{ old('status', $category->status ?? '') == 'Ativa' ? 'selected' : '' }}>Ativa</option>
+                        <option value="Inativa" {{ old('status', $category->status ?? '') == 'Inativa' ? 'selected' : '' }}>Inativa</option>
                     </select>
                     @error('status')
-                    <small class="text-danger">{{ $message }}</small>
+                        <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 

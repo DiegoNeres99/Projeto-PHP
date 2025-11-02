@@ -13,12 +13,30 @@
 
     <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body bg-light p-4">
+
+            {{-- ✅ Mensagens de sucesso ou erro --}}
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                    <div>{{ session('success') }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    <div>{{ session('error') }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <table class="table table-hover align-middle text-center">
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
                         <th><i class="bi bi-tags"></i> Nome</th>                        
-                        <th><i class="bi-basket"></i> Estoque</th>
+                        <th><i class="bi bi-basket"></i> Estoque</th>
                         <th><i class="bi bi-house"></i> Status</th>
                         <th><i class="bi bi-gear"></i> Ações</th>
                     </tr>
@@ -29,7 +47,7 @@
                     <tr class="bg-white border-bottom">
                         <td class="fw-semibold">{{ $category->id }}</td>
                         <td>{{ $category->name }}</td>
-                        <td>{{ $category->products_count ?? 0 }}</td> <!-- Estoque -->
+                        <td>{{ $category->stock }}</td> <!-- ✅ Exibe o estoque real -->
                         <td>
                             @if($category->status == 'Ativa')
                                 <span class="badge bg-success">Ativa</span>

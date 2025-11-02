@@ -17,7 +17,9 @@ class CategoryController extends Controller
     // Exibe o formulário de criação
     public function create()
     {
-        return view('categories.create_update');
+        // Envia uma nova instância vazia para o mesmo form (reuso de view)
+        $category = new Category();
+        return view('categories.create_update', compact('category'));
     }
 
     // Armazena uma nova categoria
@@ -34,7 +36,6 @@ class CategoryController extends Controller
             'status.required' => 'O campo Status é obrigatório.',
         ]);
 
-        // Salva o valor digitado no estoque (não somamos aqui, é criação)
         Category::create($request->all());
 
         return redirect()->route('categories.index')
@@ -64,15 +65,10 @@ class CategoryController extends Controller
             'status.required' => 'O campo Status é obrigatório.',
         ]);
 
-        // Atualiza os campos
+        // Atualiza os campos diretamente
         $category->name = $request->name;
         $category->status = $request->status;
-
-        // Aqui você decide:
-        // 1) Para substituir o estoque digitado:
-        // $category->stock = $request->stock;
-        // 2) Para somar ao estoque atual:
-        $category->stock += $request->stock;
+        $category->stock = $request->stock; // <-- Agora substitui o valor, não soma
 
         $category->save();
 
@@ -82,9 +78,23 @@ class CategoryController extends Controller
 
     // Remove uma categoria
     public function destroy($id)
-    {
-        Category::findOrFail($id)->delete();
+{
+    try {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
         return redirect()->route('categories.index')
                          ->with('success', 'Categoria removida com sucesso!');
+    } catch (\Illuminate\Database\QueryException $e) {
+        // Código 23000 = erro de integridade (foreign key)
+        if ($e->getCode() == '23000') {
+            return redirect()->route('categories.index')
+                             ->with('error', '❌ Não é possível excluir esta categoria, pois ela está sendo utilizada por um ou mais produtos.');
+        }
+
+        // Outros erros, apenas relança
+        throw $e;
     }
+}
+
 }
