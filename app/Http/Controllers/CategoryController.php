@@ -57,7 +57,10 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'stock' => 'required|numeric|min:0',
-            'status' => 'required|in:Ativa,Inativa',
+            'status' => 'required|in:ativo,inativo',
+
+
+
         ], [
             'name.required' => 'O campo Nome é obrigatório.',
             'stock.required' => 'O campo Estoque é obrigatório.',

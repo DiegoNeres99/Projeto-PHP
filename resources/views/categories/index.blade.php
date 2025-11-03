@@ -16,26 +16,26 @@
 
             {{-- ✅ Mensagens de sucesso ou erro --}}
             @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
-                    <i class="bi bi-check-circle-fill me-2 fs-5"></i>
-                    <div>{{ session('success') }}</div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <div>{{ session('success') }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             @endif
 
             @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-                    <div>{{ session('error') }}</div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>{{ session('error') }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             @endif
 
             <table class="table table-hover align-middle text-center">
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th><i class="bi bi-tags"></i> Nome</th>                        
+                        <th><i class="bi bi-tags"></i> Nome</th>
                         <th><i class="bi bi-basket"></i> Estoque</th>
                         <th><i class="bi bi-house"></i> Status</th>
                         <th><i class="bi bi-gear"></i> Ações</th>
@@ -47,12 +47,14 @@
                     <tr class="bg-white border-bottom">
                         <td class="fw-semibold">{{ $category->id }}</td>
                         <td>{{ $category->name }}</td>
-                        <td>{{ $category->stock }}</td> <!-- ✅ Exibe o estoque real -->
+                        <td>{{ $category->stock }}</td>
                         <td>
-                            @if($category->status == 'Ativa')
-                                <span class="badge bg-success">Ativa</span>
+                            @if($category->status == 'ativo')
+                            <span class="badge bg-success">Ativo</span>
+                            @elseif($category->status == 'inativo')
+                            <span class="badge bg-danger">Inativo</span>
                             @else
-                                <span class="badge bg-danger">Inativa</span>
+                            <span class="badge bg-secondary">Desconhecido</span>
                             @endif
                         </td>
                         <td>
@@ -75,10 +77,10 @@
             </table>
 
             @if ($categories->isEmpty())
-                <div class="text-center text-muted py-4">
-                    <i class="bi bi-exclamation-circle fs-3"></i>
-                    <p class="mt-2">Nenhuma categoria cadastrada.</p>
-                </div>
+            <div class="text-center text-muted py-4">
+                <i class="bi bi-exclamation-circle fs-3"></i>
+                <p class="mt-2">Nenhuma categoria cadastrada.</p>
+            </div>
             @endif
         </div>
     </div>

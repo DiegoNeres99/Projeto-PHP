@@ -17,7 +17,7 @@
             <form action="{{ isset($category->id) ? route('categories.update', $category->id) : route('categories.store') }}" method="POST">
                 @csrf
                 @if (isset($category->id))
-                    @method('PUT')
+                @method('PUT')
                 @endif
 
                 <!-- Nome -->
@@ -29,7 +29,7 @@
                         placeholder="Ex: Eletrônicos"
                         value="{{ old('name', $category->name ?? '') }}" />
                     @error('name')
-                        <small class="text-danger">{{ $message }}</small>
+                    <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
@@ -40,10 +40,9 @@
                     </label>
                     <input type="number" id="stock" name="stock" class="form-control"
                         placeholder="Quantidade de produtos"
-                        {{-- ⚙️ Mudança importante aqui --}}
                         value="{{ isset($category->id) ? $category->stock : old('stock', '') }}" />
                     @error('stock')
-                        <small class="text-danger">{{ $message }}</small>
+                    <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
@@ -52,12 +51,13 @@
                     <label for="status" class="form-label fw-semibold text-dark">
                         <i class="bi bi-house me-1 text-primary"></i> Status
                     </label>
-                    <select name="status" class="form-select">
-                        <option value="Ativa" {{ old('status', $category->status ?? '') == 'Ativa' ? 'selected' : '' }}>Ativa</option>
-                        <option value="Inativa" {{ old('status', $category->status ?? '') == 'Inativa' ? 'selected' : '' }}>Inativa</option>
+                    <select name="status" class="form-select" required>
+                        <option value="ativo" {{ old('status', $category->status ?? '') == 'ativo' ? 'selected' : '' }}>Ativo</option>
+                        <option value="inativo" {{ old('status', $category->status ?? '') == 'inativo' ? 'selected' : '' }}>Inativo</option>
                     </select>
+
                     @error('status')
-                        <small class="text-danger">{{ $message }}</small>
+                    <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
