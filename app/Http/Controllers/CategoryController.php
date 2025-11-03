@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function create()
     {
         // Envia uma nova instância vazia para o mesmo form (reuso de view)
-        $category = new Category();
+        $category = new Category(); // <-- CORRIGIDO: precisa existir para o form funcionar
         return view('categories.create_update', compact('category'));
     }
 
@@ -28,7 +28,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'stock' => 'required|numeric|min:0',
-            'status' => 'required|in:Ativa,Inativa',
+            'status' => 'required|in:ativo,inativo', // <-- CORRIGIDO: valores devem bater com o select do form
         ], [
             'name.required' => 'O campo Nome é obrigatório.',
             'stock.required' => 'O campo Estoque é obrigatório.',
@@ -36,7 +36,8 @@ class CategoryController extends Controller
             'status.required' => 'O campo Status é obrigatório.',
         ]);
 
-        Category::create($request->all());
+        // CORRIGIDO: só salva os campos permitidos
+        Category::create($request->only('name', 'stock', 'status'));
 
         return redirect()->route('categories.index')
                          ->with('success', 'Categoria criada com sucesso!');
@@ -57,10 +58,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'stock' => 'required|numeric|min:0',
-            'status' => 'required|in:ativo,inativo',
-
-
-
+            'status' => 'required|in:ativo,inativo,desconhecido', // <-- CORRIGIDO: valores case-sensitive
         ], [
             'name.required' => 'O campo Nome é obrigatório.',
             'stock.required' => 'O campo Estoque é obrigatório.',
@@ -70,8 +68,8 @@ class CategoryController extends Controller
 
         // Atualiza os campos diretamente
         $category->name = $request->name;
+        $category->stock = $request->stock;
         $category->status = $request->status;
-        $category->stock = $request->stock; // <-- Agora substitui o valor, não soma
 
         $category->save();
 
@@ -81,23 +79,22 @@ class CategoryController extends Controller
 
     // Remove uma categoria
     public function destroy($id)
-{
-    try {
-        $category = Category::findOrFail($id);
-        $category->delete();
+    {
+        try {
+            $category = Category::findOrFail($id);
+            $category->delete();
 
-        return redirect()->route('categories.index')
-                         ->with('success', 'Categoria removida com sucesso!');
-    } catch (\Illuminate\Database\QueryException $e) {
-        // Código 23000 = erro de integridade (foreign key)
-        if ($e->getCode() == '23000') {
             return redirect()->route('categories.index')
-                             ->with('error', '❌ Não é possível excluir esta categoria, pois ela está sendo utilizada por um ou mais produtos.');
+                             ->with('success', 'Categoria removida com sucesso!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Código 23000 = erro de integridade (foreign key)
+            if ($e->getCode() == '23000') {
+                return redirect()->route('categories.index')
+                                 ->with('error', '❌ Não é possível excluir esta categoria, pois ela está sendo utilizada por um ou mais produtos.');
+            }
+
+            // Outros erros, apenas relança
+            throw $e;
         }
-
-        // Outros erros, apenas relança
-        throw $e;
     }
-}
-
 }

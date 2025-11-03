@@ -54,6 +54,7 @@
                     <select name="status" class="form-select" required>
                         <option value="ativo" {{ old('status', $category->status ?? '') == 'ativo' ? 'selected' : '' }}>Ativo</option>
                         <option value="inativo" {{ old('status', $category->status ?? '') == 'inativo' ? 'selected' : '' }}>Inativo</option>
+                        <option value="desconhecido" {{ old('status', $category->status ?? '') == 'desconhecido' ? 'selected' : '' }}>Desconhecido</option>
                     </select>
 
                     @error('status')

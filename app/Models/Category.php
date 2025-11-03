@@ -9,9 +9,5 @@ class Category extends Model
     protected $table = 'categories';
 
     // Campos que podem ser preenchidos em massa
-    protected $fillable = [
-        'name',
-        'stock',
-        'status'
-    ];
+    protected $fillable = ['name', 'stock', 'status'];
 }
