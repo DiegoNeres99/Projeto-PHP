@@ -10,10 +10,10 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('products.index') }}">Minha Loja</a>
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categorias</a></li>
+            <ul class="navbar-nav me-auto">                
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Produtos</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('customers.index') }}">Clientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categorias</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('orders.index') }}">Pedidos</a></li>
                 
             </ul>

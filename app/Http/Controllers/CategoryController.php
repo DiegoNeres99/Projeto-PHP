@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     // Lista todas as categorias
     public function index()
     {
@@ -28,7 +37,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'stock' => 'required|numeric|min:0',
-            'status' => 'required|in:ativo,inativo', // <-- CORRIGIDO: valores devem bater com o select do form
+            'status' => 'required|in:ativo,inativo', 
         ], [
             'name.required' => 'O campo Nome é obrigatório.',
             'stock.required' => 'O campo Estoque é obrigatório.',
@@ -36,8 +45,7 @@ class CategoryController extends Controller
             'status.required' => 'O campo Status é obrigatório.',
         ]);
 
-        // CORRIGIDO: só salva os campos permitidos
-        Category::create($request->only('name', 'stock', 'status'));
+        $this->categoryService->storeCategory($request->all());     
 
         return redirect()->route('categories.index')
                          ->with('success', 'Categoria criada com sucesso!');
